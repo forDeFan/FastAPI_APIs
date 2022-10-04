@@ -1,0 +1,8 @@
+version: "3.3"
+
+services:
+  web:
+    build: .
+    command: bash -c 'uvicorn app.main:app --host 0.0.0.0'
+    ports:
+      - 8008:8000
