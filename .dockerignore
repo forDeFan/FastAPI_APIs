@@ -1,6 +1,7 @@
 .git
 .gitignore
 .env
+.dockerignore
 venv
 Dockerfile
 README.md
