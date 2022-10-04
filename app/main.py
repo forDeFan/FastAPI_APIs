@@ -1,25 +1,32 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 from app.core.db import User, database
 
 app = FastAPI()
+app.mount("/static",
+          StaticFiles(directory="app/web/static/styles"), name="static")
+templates = Jinja2Templates(directory="app/web/templates/")
 
 
-@app.get("/")
-def read_root():
-    return {"status": "ok"}
+@app.get("/", response_class=HTMLResponse)
+def get_home(request: Request):
+    return templates.TemplateResponse(name="home.html", context={"request": request})
 
 
-@app.get("/user/all")
-async def get_all_things():
-    return await User.objects.all()
+@app.get("/user/all", response_class=HTMLResponse)
+async def get_all_users(request: Request):
+    users = await User.objects.all()
+    return templates.TemplateResponse(name="users.html", context={"request": request, "users": users})
 
 
-@app.post("/user/{username}&{email}&{password}")
-async def add_thing(username: str, email: str, password: str):
+@app.post("/user/", response_class=HTMLResponse)
+async def add_user(request: Request, username: str, email: str, password: str):
     await User.objects.create(username=username, email=email, password=password)
-    return {
-        "status": f"Success. User with username: {username} and email: {email} created!"
-    }
+    users = await User.objects.all()
+    return templates.TemplateResponse(name="users.html", context={"request": request, "users": users})
 
 
 @app.on_event("startup")

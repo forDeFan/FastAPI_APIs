@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>All users</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Your Users in db as follow</h1>
+    <ul class="nobull">
+        {% for user in users %}
+        <li>
+            <p>User with username: {{ user.username}}, with id: {{ user.id }}, email: {{ user.email }}, password: {{
+                user.password }}</p>
+        </li>
+        {% else %}
+        <li>
+            <p>No users found in database! Add some.</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
