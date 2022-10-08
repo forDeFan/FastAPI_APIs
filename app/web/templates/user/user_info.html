@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% set active_page = "get_user_operations" %}
+
+{% block title %}
+<title>Specific User info</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Your User details as follow</h1>
+    <p>Username: {{ user.username }}</p>
+    <p>User id: {{ user.id }}</p>
+    <p>User email: {{ user.email }}</p>
+    <p>User password: {{ user.password }}</p>
+    <p>Is active?: {{ user.is_active }}</p>
+    <div class="center">
+        <button onclick="go_back()">Go back</button>
+    </div>
+</div>
+{% endblock %}

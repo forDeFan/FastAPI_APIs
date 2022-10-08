@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set active_page = "get_user_operations" %}
+
+{% block title %}
+<title>User Operations</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Which operation to perform ?</h1>
+    <div>
+        <p>Check user details</p>
+        <input id="username" required placeholder="Provide existing username" class="center" type="text">
+        <button id="button" class="center" onclick="set_id_value_to_href(id_to_href='username', base='/user/')">
+            Check User
+        </button>
+    </div>
+</div>
+{% endblock %}

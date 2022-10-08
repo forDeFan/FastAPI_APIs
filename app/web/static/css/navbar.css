@@ -1,0 +1,25 @@
+.nav {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    font-size: 2rem;
+}
+
+.nav__link {
+    text-decoration: none;
+    color: #1c2023;
+    margin-right: 2.5rem;
+    margin-left: 2.5rem;
+}
+
+.nav__link--active {
+    font-weight: bold;
+    color: red;
+    margin-right: 2.5rem;
+    margin-left: 2.5rem;
+}
+
+.nav__link:hover {
+    color: red;
+}
