@@ -47,10 +47,9 @@ class User_Repo:
 
     @classmethod
     async def delete_user(cls, username: str) -> bool:
-        try:
-            await User.objects.filter(username__contains=username).delete()
+        if await User.objects.filter(username__contains=username).delete() != None:
             return True
-        except NoMatch:
+        else:
             return False
 
     @classmethod
