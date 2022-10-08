@@ -1,6 +1,6 @@
 <h1>FastAPI examples</h1>
 
-Readme in development.
+Readme and app itself - in live development.
 
 ## The plan
 
@@ -44,6 +44,10 @@ B. Run docker build to get app running
 $ docker-compose up -d --build
 ```
 <br>
+Docs available at <div style="display: inline">http://localhost:8008/docs</div>
+<br>
+The app in basic mode available at <div style="display: inline">http://localhost:8008/</div>
+<br><br>
 
 3. Docker interaction
 
@@ -63,19 +67,16 @@ $ docker-compose stop
 
 The app uses local Postgres folder to keep all data in it (data in project root). 
 <br>
-If docker images to be removed also data folder must be deleted for fresh DB to be settled by docker in next run. 
+If docker images to be removed for new build also data folder must be deleted for fresh DB to be settled by docker in next run. 
 <br>
 Standard error output when building image again when data folder present will be:
 ```
-PermissionError: [Errno 13] Permission denied: 'your_app_root/data/postgres'
+PermissionError: [Errno 13] Permission denied: 'your_app_root/data/postgres'...
 ```
 <br>
-If needed simply use (while in project root):
+If in need to remove db folder (all data lost) simply use:
 
 ```
+$ cd FastAPI_apis_example
 $ sudo rm -fr data
 ```
-
-### APP interaction
-<br>
-Standard Swagger/Open API docs available at <div style="display: inline">http://localhost:8008/docs</div>
