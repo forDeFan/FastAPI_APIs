@@ -65,16 +65,23 @@ To stop containers down:
 $ docker-compose stop
 ```
 
-The app uses local Postgres folder to keep all data in it (data in project root). 
-<br>
-If docker images to be removed for new build also data folder must be deleted for fresh DB to be settled by docker in next run. 
-<br>
+If persistent data folder needed in project root - uncomment lines in docker-compose:
+
+```
+volumes: 
+- ./data/postgres:/var/lib/postgresql/data
+```
+
+If docker images to be removed for new build also persistent data folder must be deleted for fresh DB (to be created by docker in next run). 
+
 Standard error output when building image again when data folder present will be:
+<br>
+
 ```
 PermissionError: [Errno 13] Permission denied: 'your_app_root/data/postgres'...
 ```
-<br>
-If in need to remove db folder (all data lost) simply use:
+
+If in need to remove local persistent data folder (all data lost) simply use:
 
 ```
 $ cd FastAPI_apis_example
