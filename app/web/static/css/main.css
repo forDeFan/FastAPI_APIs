@@ -1,0 +1,43 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Lato, "sans-serif";
+}
+
+body {
+    margin: 0;
+}
+
+h1 {
+    color: red;
+    text-align: center;
+}
+
+p {
+    color: black;
+    text-align: center;
+}
+
+.header {
+    text-align: center;
+}
+
+.nobull {
+    list-style: none;
+}
+
+.center {
+    display: block;
+    text-align: center;
+    display: block;
+    margin: 0.5em auto;
+}
+
+.container {
+    text-align: center;
+    padding: 1em;
+}
