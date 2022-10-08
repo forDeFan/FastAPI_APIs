@@ -3,12 +3,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from app.core.db import User, database
+from app.core.db.db import database, engine, metadata
+from app.core.db.user_model import User
 
 app = FastAPI()
 app.mount("/static",
           StaticFiles(directory="app/web/static/styles"), name="static")
 templates = Jinja2Templates(directory="app/web/templates/")
+
+metadata.create_all(engine)
 
 
 @app.get("/", response_class=HTMLResponse)
