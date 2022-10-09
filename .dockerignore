@@ -1,7 +1,9 @@
 .git
 .gitignore
 .env
+.env_example
 .dockerignore
 venv
 Dockerfile
 README.md
+**/__pycache__
