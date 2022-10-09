@@ -1,7 +1,8 @@
 from app.core.user_repo import User_Repo
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from app.api.forms.check_user_form import Check_User_Form
 
 templates = Jinja2Templates(directory="app/web/templates/")
 user_router = APIRouter()
@@ -20,11 +21,24 @@ async def get_all_users(request: Request) -> Jinja2Templates:
 
 @user_router.get("/user/", response_class=HTMLResponse)
 async def get_user(request: Request, username: str) -> Jinja2Templates:
-    user = await User_Repo.get_by_username(username=username)
-    if user is None:
-        return templates.TemplateResponse(name="error/error_general.html", context={"request": request})
+    form = Check_User_Form(request=request)
+    await form.load_data()
+    if await form.is_valid():
+        try:
+            user = await User_Repo.get_by_username(username=username)
+            if user is not None:
+                response = templates.TemplateResponse(
+                    name="user/user_info.html", context={"request": request, "user": user})
+                return response
+            else:
+                return templates.TemplateResponse(name="error/error_general.html", context={"request": request})
+        except HTTPException:
+            form.__dict__.update(msg="")
+            form.__dict__.get("errors").append(
+                "username")
+            return templates.TemplateResponse("user/user_operations.html", form.__dict__)
     else:
-        return templates.TemplateResponse(name="user/user_info.html", context={"request": request, "user": user})
+        return templates.TemplateResponse(name="error/error_general.html", context={"request": request})
 
 
 @user_router.patch("/user/", response_class=HTMLResponse)

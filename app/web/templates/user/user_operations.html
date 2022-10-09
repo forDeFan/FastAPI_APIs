@@ -7,14 +7,16 @@
 
 {% block content %}
 <div class="container">
-    <h1>Which operation to perform ?</h1>
-    <div>
-        <p>Check user details</p>
-        <input id="username" required placeholder="Provide existing username" class="center" type="text">
-        <button id="button" class="center"
-            onclick="set_id_value_to_href(id_to_href='username', base='/user/?username=')">
-            Check User
-        </button>
+    <div class="center">
+        <h5 class="center">Get existing user</h5>
+    </div>
+    <div class="center">
+        <form action="/user/" method="GET">
+            <div class="center">
+                <input type="text" required placeholder="Existing username" name="username" value="{{username}}">
+            </div>
+            <button type="submit" class="center">Submit</button>
+        </form>
     </div>
 </div>
 {% endblock %}
