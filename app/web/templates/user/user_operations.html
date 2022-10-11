@@ -18,5 +18,23 @@
             <button type="submit" class="center">Submit</button>
         </form>
     </div>
+    <div class="center">
+        <h5 class="center">Add user</h5>
+    </div>
+    <div class="center">
+        <div class="nobull error">
+            {% for error in errors %}
+            <li>{{error}}</li>
+            {% endfor %}
+        </div>
+        <form action="/user/" method="POST">
+            <div class="center">
+                <input type="text" required placeholder="Username" name="username" value="{{username}}">
+                <input type="text" required placeholder="Email" name="email" value="{{email}}">
+                <input type="text" required placeholder="Password" name="password" value="{{password}}">
+            </div>
+            <button type="submit" class="center">Submit</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
