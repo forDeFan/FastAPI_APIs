@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
+
 from fastapi import Request
 
 
 class Abstract_Form(ABC):
 
     @abstractmethod
-    def __init__(self, request: Request):
+    def __init__(self, request: Request) -> None:
         pass
 
     @abstractmethod
@@ -13,5 +14,5 @@ class Abstract_Form(ABC):
         pass
 
     @abstractmethod
-    async def is_valid(self):
+    async def is_valid(self) -> bool:
         pass
