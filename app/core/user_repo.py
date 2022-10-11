@@ -1,7 +1,6 @@
 from typing import List, Union
 
 from app.core.db.user_model import User
-from asyncpg.exceptions import UniqueViolationError
 from ormar.exceptions import NoMatch
 
 
@@ -39,10 +38,12 @@ class User_Repo:
 
     @classmethod
     async def add_user(cls, username: str, email: str, password: str) -> Union[User, None]:
-        try:
-            user = await User.objects.create(username=username, email=email, password=(password))
+        by_username = await User.objects.get_or_none(username=username)
+        by_email = await User.objects.get_or_none(email=email)
+        if (by_username and by_email) == None:
+            user = await User.objects.create(username=username, email=email, password=password)
             return user
-        except UniqueViolationError:
+        else:
             return None
 
     @classmethod
