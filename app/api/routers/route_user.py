@@ -30,8 +30,6 @@ async def get_user(request: Request, username: str) -> Jinja2Templates:
             response = templates.TemplateResponse(
                 name="user/user_info.html", context={"request": request, "user": user})
             return response
-        else:
-            return templates.TemplateResponse(name="error/error_general.html", context={"request": request})
     return templates.TemplateResponse(name="error/error_general.html", context={"request": request})
 
 
