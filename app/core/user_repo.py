@@ -13,19 +13,13 @@ class User_Repo:
 
     @classmethod
     async def get_by_username(cls, username: str) -> Union[User, None]:
-        try:
-            user = await User.objects.filter(username__contains=username).get()
-            return user
-        except NoMatch:
-            return None
+        user = await User.objects.get_or_none(username=username)
+        return user
 
     @classmethod
     async def get_by_email(cls, email: str) -> Union[User, None]:
-        try:
-            user = await User.objects.filter(email__contains=email).get()
-            return user
-        except NoMatch:
-            return None
+        user = await User.objects.get_or_none(email=email)
+        return user
 
     @classmethod
     async def update_user_password(cls, username: str, password: str) -> Union[User, None]:
@@ -55,10 +49,10 @@ class User_Repo:
 
     @classmethod
     async def get_user_password(cls, username: str):
-        user = await User.objects.filter(username__contains=username).get()
+        user = await User.objects.filter(username__contains=username).first()
         return str(user.password)
 
     @classmethod
     async def get_user_email(cls, username: str):
-        user = await User.objects.filter(username__contains=username).get()
+        user = await User.objects.filter(username__contains=username).first()
         return str(user.email)
