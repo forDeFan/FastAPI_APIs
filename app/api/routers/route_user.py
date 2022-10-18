@@ -14,7 +14,7 @@ async def get_user_operations(request: Request) -> Jinja2Templates:
     return templates.TemplateResponse(name="user/user_operations.html", context={"request": request})
 
 
-@user_router.get("/user/all", response_class=HTMLResponse)
+@user_router.get("/user/get/all", response_class=HTMLResponse)
 async def get_all_users(request: Request) -> Jinja2Templates:
     users = await User_Repo.get_all()
     return templates.TemplateResponse(name="user/user_all.html", context={"request": request, "users": users})
