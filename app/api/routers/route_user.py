@@ -20,17 +20,19 @@ async def get_all_users(request: Request) -> Jinja2Templates:
     return templates.TemplateResponse(name="user/user_all.html", context={"request": request, "users": users})
 
 
-@user_router.get("/user/", response_class=HTMLResponse)
-async def get_user(request: Request, username: str) -> Jinja2Templates:
+@user_router.post("/user/get", response_class=HTMLResponse)
+async def get_user(request: Request) -> Jinja2Templates:
     form = Check_User_Form(request=request)
     await form.load_data()
     if await form.is_valid():
-        user = await User_Repo.get_by_username(username=username)
+        user = await User_Repo.get_by_username(username=form.username)
         if user is not None:
             response = templates.TemplateResponse(
                 name="user/user_info.html", context={"request": request, "user": user})
             return response
-    return templates.TemplateResponse(name="error/error_general.html", context={"request": request})
+        else:
+            form.errors.append("No such user !")
+    return templates.TemplateResponse("user/user_operations.html", form.__dict__)
 
 
 @user_router.patch("/user/", response_class=HTMLResponse)
