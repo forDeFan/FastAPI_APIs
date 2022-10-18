@@ -44,9 +44,10 @@ B. Run docker build to get app running
 $ docker-compose up -d --build
 ```
 <br>
-Docs available at <div style="display: inline">http://localhost:8008/docs</div>
+<strong>THE APP AVAILABLE at <div style="display: inline">http://localhost:8008/</div></strong>
 <br>
-The app in basic mode available at <div style="display: inline">http://localhost:8008/</div>
+<br>
+Docs available at <div style="display: inline">http://localhost:8008/docs</div>
 <br><br>
 
 3. Docker interaction
@@ -64,6 +65,22 @@ To stop containers down:
 ```
 $ docker-compose stop
 ```
+
+4. To connect to DB from outside container by Database Menager (ex. DBeaver).
+
+a) get a postgres container IP by
+
+```
+$ docker inspect {container_id}
+```
+
+b) set DB connection to that IP:port, DB, DB username and password indicated in .env
+
+
+
+
+<br><br>
+Aditional features:
 
 If persistent data folder needed in project root - uncomment lines in docker-compose:
 
