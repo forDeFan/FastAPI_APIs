@@ -13,7 +13,7 @@ class User_Repo:
 
     @classmethod
     async def get_by_username(cls, username: str) -> Union[User, None]:
-        user = await User.objects.get_or_none(username=username)
+        user = await User.objects.filter(username=username).get_or_none()
         return user
 
     @classmethod
@@ -42,9 +42,11 @@ class User_Repo:
 
     @classmethod
     async def delete_user(cls, username: str) -> bool:
-        if await User.objects.filter(username__contains=username).delete() != None:
+        try:
+            user = await User.objects.filter(username__contains=username).first()
+            await user.delete()
             return True
-        else:
+        except NoMatch:
             return False
 
     @classmethod
