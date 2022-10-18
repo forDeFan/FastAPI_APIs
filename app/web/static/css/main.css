@@ -41,3 +41,11 @@ p {
     text-align: center;
     padding: 1em;
 }
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
