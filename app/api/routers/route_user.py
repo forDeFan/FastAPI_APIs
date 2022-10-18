@@ -35,7 +35,7 @@ async def get_user(request: Request) -> Jinja2Templates:
     return templates.TemplateResponse("user/user_operations.html", form.__dict__)
 
 
-@user_router.patch("/user/update", response_class=HTMLResponse)
+@user_router.patch("/user/", response_class=HTMLResponse)
 async def update_user_password(request: Request, username: str, password: str) -> Jinja2Templates:
     user = await User_Repo.update_user_password(username=username, password=password)
     if user is None:
