@@ -34,8 +34,8 @@ Readme and app itself - in live development.
 A. Install codebase:
 
 ```
-$ git clone https://github.com/forDeFan/FastAPI_apis_example.git
-$ cd FastAPI_apis_example
+$ git clone https://github.com/forDeFan/FastAPI_APIs.git
+$ cd FastAPI_APIs
 ```
 
 B. Run docker build to get app running
@@ -101,6 +101,6 @@ PermissionError: [Errno 13] Permission denied: 'your_app_root/data/postgres'...
 If in need to remove local persistent data folder (all data lost) simply use:
 
 ```
-$ cd FastAPI_apis_example
+$ cd FastAPI_APIs
 $ sudo rm -fr data
 ```
