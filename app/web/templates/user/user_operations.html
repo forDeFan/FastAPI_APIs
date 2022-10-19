@@ -50,6 +50,23 @@
             <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
         </form>
     </div>
+    <br>
+    <div class="center">
+        <h5 class="center">Change user password</h5>
+    </div>
+    <div class="center">
+        <form action="/user/update" method="POST">
+            <div class="center">
+                <input type="text" required placeholder="Username" name="username"
+                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
+                <input type="text" required placeholder="Old password" name="old_password"
+                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
+                <input type="text" required placeholder="New password" name="new_password"
+                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
+            </div>
+            <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
+        </form>
+    </div>
     <br><br>
     <div id="communicate">
         {% for error in errors %}
