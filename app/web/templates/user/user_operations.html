@@ -27,12 +27,9 @@
     <div class="center">
         <form action="/user/add" method="POST">
             <div class="center">
-                <input type="text" required placeholder="Username" name="username"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
-                <input type="text" required placeholder="Email" name="email"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
-                <input type="text" required placeholder="Password" name="password"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
+                <input type="text" required placeholder="Username" name="username">
+                <input type="text" required placeholder="Email" name="email">
+                <input type="text" required placeholder="Password" name="password">
             </div>
             <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
         </form>
@@ -44,8 +41,7 @@
     <div class="center">
         <form action="/user/delete" method="POST">
             <div class="center">
-                <input type="text" required placeholder="Existing username" name="username"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
+                <input type="text" required placeholder="Existing username" name="username">
             </div>
             <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
         </form>
@@ -57,12 +53,9 @@
     <div class="center">
         <form action="/user/update" method="POST">
             <div class="center">
-                <input type="text" required placeholder="Username" name="username"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
-                <input type="text" required placeholder="Old password" name="old_password"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
-                <input type="text" required placeholder="New password" name="new_password"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
+                <input type="text" required placeholder="Username" name="username">
+                <input type="text" required placeholder="Old password" name="old_password">
+                <input type="text" required placeholder="New password" name="new_password">
             </div>
             <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
         </form>
