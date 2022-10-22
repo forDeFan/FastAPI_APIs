@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set active_page = "get_login" %}
+
+{% block title %}
+<title>Login</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form action="/login" method="POST">
+        <div>
+            <label>Username</label>
+            <input type="text" required placeholder="Username" name="username">
+        </div>
+        <div>
+            <label>Password</label>
+            <input type="text" required placeholder="Password" name="password">
+        </div>
+        <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
+    </form>
+</div>
+<div id="communicate" class="container">
+    {% for error in errors %}
+    <li class="nobull error">{{error}}</li>
+    {% endfor %}
+    {% if msg %}
+    <li class="nobull success">
+        {{msg}}
+    </li>
+    {% endif %}
+</div>
+{% endblock %}
