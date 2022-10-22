@@ -58,8 +58,6 @@ $ docker-compose up -d --build
 <strong>After successul build THE APP AVAILABLE at your<div style="display: inline">http://localhost:8008/</div></strong>
 <br>
 <br>
-Docs available at <div style="display: inline">http://localhost:8008/docs</div>
-<br><br>
 
 3. Docker interaction
 
@@ -87,10 +85,7 @@ $ docker inspect {container_id}
 
 b) set DB connection to that IP:port, DB, DB username and password indicated in .env
 
-
-
-
-<br><br>
+<br>
 Aditional features:
 
 If persistent data folder needed in project root - uncomment lines in docker-compose:
