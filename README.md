@@ -49,7 +49,7 @@ POSTGRES_PORT=your_postgres_exposed_port
 POSTGRES_DB=your_postgres_database_name
 
 # App
-DB_SECRET="your_secret_for_db_encryption"
+DB_SECRET="your_secret_for_user_pass_in_db_encryption"
 ```
 
 C. Run docker build to get app running
