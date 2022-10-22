@@ -3,12 +3,14 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api.routers.route_user import user_router
 from app.api.routers.route_root import root_router
+from app.api.routers.route_login import login_router
 from app.core.db.db import database, engine, metadata
 
 
 def include_router(app: FastAPI):
     app.include_router(router=user_router)
     app.include_router(router=root_router)
+    app.include_router(router=login_router)
 
 
 def configure_static(app: FastAPI):
