@@ -19,3 +19,4 @@ class User(Model):
                            unique=False,
                            nullable=False)
     is_active: bool = Boolean(default=True, nullable=False)
+    is_admin: bool = Boolean(default=False, nullable=False)

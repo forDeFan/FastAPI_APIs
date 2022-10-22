@@ -12,7 +12,7 @@
         {% for user in users %}
         <li>
             <p>User with username: {{ user.username}}, with id: {{ user.id }}, email: {{ user.email }}, password: {{
-                user.password }}</p>
+                user.password }}, is active: {{ user.is_active }}, is admin: {{ user.is_admin }}</p>
         </li>
         {% else %}
         <li>
