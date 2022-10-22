@@ -1,7 +1,7 @@
 from app.api.forms.login_form import Login_Form
-from fastapi import APIRouter, HTTPException, Request
-from fastapi.templating import Jinja2Templates
 from app.core.user_repo import User_Repo
+from fastapi import APIRouter, Request
+from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(directory="app/web/templates/")
 login_router = APIRouter()
