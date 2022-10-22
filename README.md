@@ -38,13 +38,24 @@ $ git clone https://github.com/forDeFan/FastAPI_APIs.git
 $ cd FastAPI_APIs
 ```
 
-B. Run docker build to get app running
+B. Add .env file in project root (see .env_example) and set up variables (used in docker build faze).
+   env variables as follow:
+
+```
+# Docker DB
+POSTGRES_USER=your_postgres_username
+POSTGRES_PASSWORD=your_postgres_user_password
+POSTGRES_PORT=your_postgres_exposed_port
+POSTGRES_DB=your_postgres_database_name
+```
+
+C. Run docker build to get app running
 
 ```
 $ docker-compose up -d --build
 ```
 <br>
-<strong>THE APP AVAILABLE at <div style="display: inline">http://localhost:8008/</div></strong>
+<strong>After successul build THE APP AVAILABLE at your<div style="display: inline">http://localhost:8008/</div></strong>
 <br>
 <br>
 Docs available at <div style="display: inline">http://localhost:8008/docs</div>
