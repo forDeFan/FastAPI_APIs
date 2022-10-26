@@ -5,7 +5,7 @@ from asyncpg import UniqueViolationError
 from ormar.exceptions import NoMatch
 
 
-class User_Repo:
+class UserRepo:
 
     @classmethod
     async def get_all(cls) -> List[User]:

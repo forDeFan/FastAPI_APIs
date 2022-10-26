@@ -1,10 +1,10 @@
 from typing import Optional
 
-from app.api.forms.check_user_form import Check_User_Form
+from app.api.forms.check_user_form import CheckUserForm
 from fastapi import Request
 
 
-class Add_User_Form(Check_User_Form):
+class AddUserForm(CheckUserForm):
 
     def __init__(self, request: Request) -> None:
         super().__init__(request=request)

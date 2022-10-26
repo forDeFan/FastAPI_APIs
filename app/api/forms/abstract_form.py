@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from fastapi import Request
 
 
-class Abstract_Form(ABC):
+class AbstractForm(ABC):
 
     @abstractmethod
     def __init__(self, request: Request) -> None:
