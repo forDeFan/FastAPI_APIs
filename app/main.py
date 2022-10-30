@@ -34,13 +34,15 @@ app = start_application()
 async def startup():
     if not database.is_connected:
         await database.connect()
-    await UserRepo.add_user(
-        username="admin",
-        email="admin@localhost",
-        password=settings.ADMIN_PASSWORD,
-        is_active=True,
-        is_admin=True,
-    )
+    admin_exist = await UserRepo.get_by_username(username="admin")
+    if admin_exist is None:
+        await UserRepo.add_user(
+            username="admin",
+            email="admin@localhost",
+            password=settings.ADMIN_PASSWORD,
+            is_active=True,
+            is_admin=True,
+        )
 
 
 @app.on_event("shutdown")
