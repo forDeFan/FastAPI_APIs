@@ -6,7 +6,6 @@ from ormar.exceptions import NoMatch
 
 
 class UserRepo:
-
     @classmethod
     async def get_all(cls) -> List[User]:
         users = await User.objects.all()
@@ -23,37 +22,57 @@ class UserRepo:
         return user
 
     @classmethod
-    async def update_user_password(cls, username: str, password: str) -> Union[User, None]:
+    async def update_user_password(
+        cls, username: str, password: str
+    ) -> Union[User, None]:
         try:
-            await User.objects.filter(username__contains=username).update(password=password)
+            await User.objects.filter(username__contains=username).update(
+                password=password
+            )
             updated_user = await User.objects.filter(username__contains=username).get()
             return updated_user
         except:
             return None
 
     @classmethod
-    async def add_user(cls, username: str, email: str, password: str) -> Union[User, None]:
+    async def add_user(
+        cls,
+        username: str,
+        email: str,
+        password: str,
+        is_active: bool = True,
+        is_admin: bool = False,
+    ) -> Union[User, None]:
         try:
-            user = await User.objects.create(username=username, email=email, password=password)
+            user = await User.objects.create(
+                username=username,
+                email=email,
+                password=password,
+                is_active=is_active,
+                is_admin=is_admin,
+            )
             return user
         except UniqueViolationError:
             return None
 
     @classmethod
-    async def delete_user(cls, username: str) -> bool:
+    async def delete_user(cls, username: str) -> Union[bool, None]:
         try:
             user = await User.objects.filter(username__contains=username).first()
-            await user.delete()
-            return True
+            if not user.is_admin:
+                await user.delete()
+                return True
+            else:
+                return False
         except NoMatch:
-            return False
+            return None
 
     @classmethod
-    async def get_user_password(cls, username: str):
+    async def get_user_password(cls, username: str) -> str:
         user = await User.objects.filter(username__contains=username).first()
         return str(user.password)
 
     @classmethod
-    async def get_user_email(cls, username: str):
+    async def get_user_email(cls, username: str) -> str:
         user = await User.objects.filter(username__contains=username).first()
         return str(user.email)
