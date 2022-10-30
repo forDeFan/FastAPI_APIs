@@ -28,6 +28,7 @@ Readme and app itself - in live development.
 
 * Python 3.8 or higher installed
 * Docker installed
+* Docker compose installed
 
 2. To run the app
 
@@ -38,8 +39,8 @@ $ git clone https://github.com/forDeFan/FastAPI_APIs.git
 $ cd FastAPI_APIs
 ```
 
-B. Add .env file in project root (see .env_example) and set up variables (used in docker build faze).
-   env variables as follow:
+B. Add .env file in project root (see .env_example) and set up variables (used in docker build phase).<br>
+   Env variables as follow:
 
 ```
 # Docker DB
@@ -48,8 +49,10 @@ POSTGRES_PASSWORD=your_postgres_user_password
 POSTGRES_PORT=your_postgres_exposed_port
 POSTGRES_DB=your_postgres_database_name
 
-# App
-DB_SECRET="your_secret_for_user_pass_in_db_encryption"
+# App variables. Single quotes - important.
+ADMIN_PASSWORD='your_admin_user_password'
+DB_SECRET='your_secret_for_user_pass_in_db_encryption'
+JWT_SECRET_KEY='your_secret_key_for_JWT_generation'
 ```
 
 C. Run docker build to get app running
@@ -58,7 +61,7 @@ C. Run docker build to get app running
 $ docker-compose up -d --build
 ```
 <br>
-<strong>After successul build THE APP AVAILABLE at your<div style="display: inline">http://localhost:8008/</div></strong>
+<strong>After successul build THE APP AVAILABLE at --> <div style="display: inline">http://localhost:8008/</div></strong>
 <br>
 <br>
 
@@ -83,10 +86,10 @@ $ docker-compose stop
 a) get a postgres container IP by
 
 ```
-$ docker inspect {container_id}
+$ docker inspect {db_container_id}
 ```
 
-b) set DB connection to that IP:port, DB, DB username and password indicated in .env
+b) set DB connection to that IP (port, DB name, DB username and password indicated in .env).
 
 <br>
 Aditional features:
