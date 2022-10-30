@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from app.api.routers.route_user import user_router
-from app.api.routers.route_root import root_router
 from app.api.routers.route_login import login_router
+from app.api.routers.route_root import root_router
+from app.api.routers.route_user import user_router
 from app.core.db.db import database, engine, metadata
+from app.core.user_repo import UserRepo
+from app.core.config import settings
 
 
 def include_router(app: FastAPI):
@@ -14,8 +16,7 @@ def include_router(app: FastAPI):
 
 
 def configure_static(app: FastAPI):
-    app.mount("/static",
-              StaticFiles(directory="app/web/static"), name="static")
+    app.mount("/static", StaticFiles(directory="app/web/static"), name="static")
 
 
 def start_application() -> FastAPI:
@@ -33,6 +34,13 @@ app = start_application()
 async def startup():
     if not database.is_connected:
         await database.connect()
+    await UserRepo.add_user(
+        username="admin",
+        email="admin@localhost",
+        password=settings.ADMIN_PASSWORD,
+        is_active=True,
+        is_admin=True,
+    )
 
 
 @app.on_event("shutdown")
