@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "shared/base.html" %}
 {% set active_page = "get_user_operations" %}
 
 {% block title %}
@@ -7,15 +7,23 @@
 
 {% block content %}
 <div class="container">
-    <br>
+    <div id="communicate" class="communicate-box">
+        {% for error in errors %}
+        <li class="nobull error">{{error}}</li>
+        {% endfor %}
+        {% if msg %}
+        <li class="nobull success">
+            {{msg}}
+        </li>
+        {% endif %}
+    </div>
     <div class="center">
         <h5 class="center">Get existing user</h5>
     </div>
     <div class="center">
         <form action="/user/get" method="POST">
             <div class="center">
-                <input type="text" required placeholder="Existing username" name="username"
-                    value="{{ username if (errors|length==0 and msg|length==0) else ''}}">
+                <input type="text" required placeholder="Existing username" name="username">
             </div>
             <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
         </form>
@@ -60,17 +68,5 @@
             <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
         </form>
     </div>
-    <br><br>
-    <div id="communicate">
-        {% for error in errors %}
-        <li class="nobull error">{{error}}</li>
-        {% endfor %}
-        {% if msg %}
-        <li class="nobull success">
-            {{msg}}
-        </li>
-        {% endif %}
-    </div>
-
 </div>
 {% endblock %}

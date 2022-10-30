@@ -49,3 +49,7 @@ p {
 .success {
     color: green;
 }
+
+.communicate-box {
+    height: 2em;
+}
