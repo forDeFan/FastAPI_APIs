@@ -26,7 +26,7 @@ async def decode_access_token(token: str) -> Union[User, None]:
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
     )
-    token = token.removeprefix("Bearer").strip()
+    token = token.lstrip("Bearer").strip()
     try:
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
@@ -48,7 +48,7 @@ def get_current_user_from_token(
     return user
 
 
-def get_current_user_from_cookie(request: Request) -> Union[User, None]:
+async def get_current_user_from_cookie(request: Request) -> Union[User, None]:
     token = request.cookies.get(settings.COOKIE_NAME)
-    user = decode_access_token(token)
+    user = await decode_access_token(token)
     return user
