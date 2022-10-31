@@ -26,7 +26,10 @@ async def login(request: Request) -> Union[RedirectResponse, Jinja2Templates]:
         db_user = await UserRepo.get_by_username(username=form.username)
         if db_user is not None:
             if db_user.password == form.password:
-                response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+                form.__dict__.update(
+                    msg=f"{db_user.username.capitalize()}"
+                )
+                response = templates.TemplateResponse("login.html", form.__dict__)
                 # Produce cookie with JWT calling token endpoint.
                 await get_access_token(response=response, form_data=form)
                 return response
@@ -51,7 +54,7 @@ async def get_access_token(
 
 
 @login_router.get("/logout", response_class=HTMLResponse)
-def logout() -> RedirectResponse:
+def delete_cookie(response: Response) -> RedirectResponse:
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     response.delete_cookie(settings.COOKIE_NAME)
     return response

@@ -2,7 +2,8 @@ from app.api.forms.add_user_form import AddUserForm
 from app.api.forms.check_user_form import CheckUserForm
 from app.api.forms.update_user_pass_form import UpdateUserPassForm
 from app.core.config import settings
-from app.core.security.jwt_handler import oauth2_scheme
+from app.core.security.jwt_handler import (get_current_user_from_cookie,
+                                           oauth2_scheme)
 from app.core.user_repo import UserRepo
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -57,17 +58,23 @@ async def update_user_password(request: Request) -> Jinja2Templates:
         if not is_logged_in(request=request):
             form.errors.append("Update not allowed without log in!")
         else:
-            user = await UserRepo.get_by_username(username=form.username)
-            if user is not None:
-                if user.password == form.old_password:
-                    await UserRepo.update_user_password(
-                        username=form.username, password=form.new_password
-                    )
-                    form.__dict__.update(
-                        msg=f"Password for user: {form.username}, changed successfully."
-                    )
+            db_user = await UserRepo.get_by_username(username=form.username)
+            cookie_user = await get_current_user_from_cookie(request=request)
+            if db_user is not None:
+                if cookie_user.username == db_user.username or cookie_user.is_admin:
+                    if db_user.password == form.old_password:
+                        await UserRepo.update_user_password(
+                            username=form.username, password=form.new_password
+                        )
+                        form.__dict__.update(
+                            msg=f"Password for user: {form.username}, changed successfully."
+                        )
+                    else:
+                        form.errors.append("Wrong old password provided!")
                 else:
-                    form.errors.append("Wrong old password provided!")
+                    form.errors.append(
+                        "Only user himself or Admin can change password!"
+                    )
             else:
                 form.errors.append("No such user!")
     return templates.TemplateResponse("user/user_operations.html", form.__dict__)
@@ -83,13 +90,19 @@ async def add_user(request: Request) -> Jinja2Templates:
         if not is_logged_in(request=request):
             form.errors.append("Adding not allowed without log in!")
         else:
-            user = await UserRepo.add_user(
-                username=form.username, email=form.email, password=form.password
-            )
-            if user is not None:
-                form.__dict__.update(
-                    msg=f"User with username: {form.username}, added succesfully."
+            cookie_user = await get_current_user_from_cookie(request=request)
+            if cookie_user.is_admin:
+                new_user = await UserRepo.add_user(
+                    username=form.username, email=form.email, password=form.password
                 )
+                if new_user is not None:
+                    form.__dict__.update(
+                        msg=f"User with username: {form.username}, added succesfully."
+                    )
+                else:
+                    form.errors.append("Not added - such user already exists!")
+            else:
+                form.errors.append("Not added - only admin can add new users.")
     return templates.TemplateResponse("user/user_operations.html", form.__dict__)
 
 
@@ -103,13 +116,17 @@ async def delete_user(request: Request) -> Jinja2Templates:
         if not is_logged_in(request=request):
             form.errors.append("Delete not allowed without log in!")
         else:
-            user = await UserRepo.delete_user(username=form.username)
-            if user is True:
-                form.__dict__.update(
-                    msg=f"User with username: {form.username}, deleted succesfully."
-                )
-            if user is False:
-                form.errors.append("Admin can not be removed !")
+            cookie_user = await get_current_user_from_cookie(request=request)
+            if cookie_user.is_admin:
+                user = await UserRepo.delete_user(username=form.username)
+                if user is True:
+                    form.__dict__.update(
+                        msg=f"User with username: {form.username}, deleted succesfully."
+                    )
+                if user is False:
+                    form.errors.append("Admin can not be removed !")
+                else:
+                    form.errors.append("No such user!")
             else:
-                form.errors.append("No such user!")
+                form.errors.append("Only Admin can delete users!")
     return templates.TemplateResponse("user/user_operations.html", form.__dict__)
