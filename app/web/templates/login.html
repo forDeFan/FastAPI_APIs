@@ -8,6 +8,7 @@
 {% block content %}
 <div class="container">
     {% if ('access_token' in request.cookies) %}
+    <h2>LOG OUT</h2>
     <p>
         You are logged in.
     </p>
@@ -15,6 +16,7 @@
         If you wish you can <a href="/logout">logout</a>
     </p>
     {% else %}
+    <h2>LOG IN</h2>
     <form id="login_form" action="/login" method="POST">
         <div>
             <label>Username</label>
