@@ -1,6 +1,12 @@
 <h1>FastAPI examples</h1>
 
 Readme and app itself - in live development.
+FastAPI training study.
+
+Basic usage: the user can perform operations on database served via web page on localhost:8008.
+Some operations possible to perfrom without logging in, some only for logged in user.
+
+All users in db listed on localhost:8008/user/get/all (admin data for login can be found there).
 
 ## The plan
 
