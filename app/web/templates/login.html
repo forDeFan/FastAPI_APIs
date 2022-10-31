@@ -7,7 +7,15 @@
 
 {% block content %}
 <div class="container">
-    <form action="/login" method="POST">
+    {% if ('access_token' in request.cookies or msg) %}
+    <p>Logged in.</p>
+    <p>You can perform user operations</p>
+    <P>
+        No log - out service implemeneted yet - to log out close web page (to destroy cookies), and open new one in new window
+        if you would like to try log in as user other than Admin (after you will add user to DB).
+    </P>
+    {% else %}
+    <form id="login_form" action="/login" method="POST">
         <div>
             <label>Username</label>
             <input type="text" required placeholder="Username" name="username">
@@ -18,15 +26,16 @@
         </div>
         <button type="submit" class="center" onclick="clear_elem('communicate')">Submit</button>
     </form>
+    {% endif %}
 </div>
 <div id="communicate" class="container">
     {% for error in errors %}
     <li class="nobull error">{{error}}</li>
     {% endfor %}
+</div>
+<div>
     {% if msg %}
-    <li class="nobull success">
-        {{msg}}
-    </li>
+
     {% endif %}
 </div>
 {% endblock %}
