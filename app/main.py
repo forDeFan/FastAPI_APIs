@@ -9,17 +9,36 @@ from app.core.user_repo import UserRepo
 from app.core.config import settings
 
 
-def include_router(app: FastAPI):
+def include_router(app: FastAPI) -> None:
+    """
+    To include specific API routes into FastAPI app.
+
+    Args:
+        app (FastAPI): instance where routers will be added.
+    """
     app.include_router(router=user_router)
     app.include_router(router=root_router)
     app.include_router(router=login_router)
 
 
-def configure_static(app: FastAPI):
+def configure_static(app: FastAPI) -> None:
+    """
+    Add static files folder as path to website.
+
+    Args:
+        app (FastAPI): instance
+    """
     app.mount("/static", StaticFiles(directory="app/web/static"), name="static")
 
 
 def start_application() -> FastAPI:
+    """
+    Start the app and include routers, static folder, created DB and instance of
+    FastAPI itself.
+
+    Returns:
+        FastAPI: runnable instance
+    """
     app = FastAPI(title="Fast API training")
     include_router(app)
     configure_static(app)
@@ -31,7 +50,11 @@ app = start_application()
 
 
 @app.on_event("startup")
-async def startup():
+async def startup() -> None:
+    """
+    Connect to database at app startup and add default admin user to satabse
+    if not exist.
+    """
     if not database.is_connected:
         await database.connect()
     admin_exist = await UserRepo.get_by_username(username="admin")
@@ -46,6 +69,9 @@ async def startup():
 
 
 @app.on_event("shutdown")
-async def shutdown():
+async def shutdown() -> None:
+    """
+    Close databse connection at app/ website closing.
+    """
     if database.is_connected:
         await database.disconnect()

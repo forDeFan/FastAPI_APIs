@@ -8,4 +8,13 @@ root_router = APIRouter()
 
 @root_router.get("/", response_class=HTMLResponse)
 async def home(request: Request) -> Jinja2Templates:
+    """
+    \f Homepage endpoint.
+
+    Args:
+        request (Request): to be used in templating.
+
+    Returns:
+        Jinja2Templates: rendered homepage template.
+    """
     return templates.TemplateResponse(name="home.html", context={"request": request})

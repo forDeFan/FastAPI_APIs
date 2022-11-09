@@ -4,6 +4,11 @@ from ormar import Boolean, EncryptBackends, Integer, Model, String
 
 
 class User(Model):
+    """
+    Model of User object to be checked against Pydantic by Ormar
+    ORM implementation.
+    Creation of users table in this point.
+    """
     class Meta(BaseMeta):
         tablename = "users"
 
