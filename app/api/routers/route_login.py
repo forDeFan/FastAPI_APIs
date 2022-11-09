@@ -31,6 +31,9 @@ def get_login(request: Request) -> Jinja2Templates:
 async def login(request: Request) -> Union[RedirectResponse, Jinja2Templates]:
     """
     \f Login functionality with usage of cookie placed access token.
+    Only existing user can log in to the service.
+
+    If errors - will be returned in the Jinja template to inform user in UI.
 
     Args:
         request (Request): to be used in templating.
