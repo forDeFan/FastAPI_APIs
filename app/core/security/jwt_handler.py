@@ -3,12 +3,9 @@ from typing import Dict, Union
 
 from app.core.config import settings
 from app.core.db.user_model import User
-from app.core.security.auth import OAuth2PasswordBearerWithCookie
 from app.core.user_repo import UserRepo
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Request
 from jose import JWTError, jwt
-
-oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="/token")
 
 
 def create_access_token(data: Dict) -> str:
@@ -22,29 +19,16 @@ def create_access_token(data: Dict) -> str:
 
 
 async def decode_access_token(token: str) -> Union[User, None]:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-    )
     token = token.lstrip("Bearer").strip()
     try:
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
         )
         username: str = payload.get("username")
-        if username is None:
-            raise credentials_exception
     except JWTError:
-        raise credentials_exception
+        return None
 
     user = await UserRepo.get_by_username(username=username)
-    return user
-
-
-def get_current_user_from_token(
-    token: str = Depends(oauth2_scheme),
-) -> Union[User, None]:
-    user = decode_access_token(token)
     return user
 
 
