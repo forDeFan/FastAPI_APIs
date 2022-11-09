@@ -13,22 +13,36 @@ templates = Jinja2Templates(directory="app/web/templates/")
 login_router = APIRouter()
 
 
-@login_router.get("/login")
+@login_router.get(
+    "/login",
+    tags=["LOGIN"],
+    response_class=HTMLResponse,
+    description="Login page",
+)
 def get_login(request: Request) -> Jinja2Templates:
     """
     \f Endpoint to for login page.
 
     Args:
         request (Request): to be used in templating.
-        
+
     Returns:
         Jinja2Templates: rendered login page template
     """
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse(
+        "login.html", {"request": request}
+    )
 
 
-@login_router.post("/login")
-async def login(request: Request) -> Union[RedirectResponse, Jinja2Templates]:
+@login_router.post(
+    "/login",
+    tags=["LOGIN"],
+    response_class=HTMLResponse,
+    description="Login process goes thru form.",
+)
+async def login(
+    request: Request,
+) -> Union[RedirectResponse, Jinja2Templates]:
     """
     \f Login functionality with usage of cookie placed access token.
     Only existing user can log in to the service.
@@ -39,7 +53,7 @@ async def login(request: Request) -> Union[RedirectResponse, Jinja2Templates]:
         request (Request): to be used in templating.
 
     Returns:
-        Union[RedirectResponse, Jinja2Templates]: 
+        Union[RedirectResponse, Jinja2Templates]:
             If succesfull log in - redirect to /user endpoint
             If not succesfull reload login page.
     """
@@ -53,7 +67,9 @@ async def login(request: Request) -> Union[RedirectResponse, Jinja2Templates]:
                     url="/user", status_code=status.HTTP_302_FOUND
                 )
                 # Produce cookie with JWT calling token endpoint.
-                await get_access_token(response=response, form_data=form)
+                await get_access_token(
+                    response=response, form_data=form
+                )
                 return response
             else:
                 form.errors.append("You provided wrong data.")
@@ -62,16 +78,21 @@ async def login(request: Request) -> Union[RedirectResponse, Jinja2Templates]:
     return templates.TemplateResponse("login.html", form.__dict__)
 
 
-@login_router.post("/token")
+@login_router.post(
+    "/token",
+    tags=["LOGIN"],
+    description="Cookie with token generation.",
+)
 async def get_access_token(
     response: Response, form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Dict[str, str]:
     """
     \f Endpoint for token to be issued at login in.
+    Token placed in cookie with "Bearer" prefix.
 
     Args:
         response (Response): to be used in templating.
-        form_data (OAuth2PasswordRequestForm, optional): 
+        form_data (OAuth2PasswordRequestForm, optional):
             username and password will be taken from login form.
 
     Returns:
@@ -81,12 +102,19 @@ async def get_access_token(
     access_token = create_access_token(data={"username": user.username})
     # HttpOnly - prevent JS from reading the cookie.
     response.set_cookie(
-        key=settings.COOKIE_NAME, value=f"Bearer {access_token}", httponly=True
+        key=settings.COOKIE_NAME,
+        value=f"Bearer {access_token}",
+        httponly=True,
     )
     return {settings.COOKIE_NAME: access_token, "token_type": "bearer"}
 
 
-@login_router.get("/logout", response_class=HTMLResponse)
+@login_router.get(
+    "/logout",
+    tags=["LOGIN"],
+    response_class=HTMLResponse,
+    description="Destroy cookies after log out.",
+)
 def delete_cookie(response: Response) -> RedirectResponse:
     """
     \f Log out endpoint.
@@ -98,6 +126,8 @@ def delete_cookie(response: Response) -> RedirectResponse:
     Returns:
         RedirectResponse: redirection to login page.
     """
-    response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    response = RedirectResponse(
+        url="/login", status_code=status.HTTP_302_FOUND
+    )
     response.delete_cookie(settings.COOKIE_NAME)
     return response

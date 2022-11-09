@@ -33,7 +33,12 @@ def is_logged_in(request: Request) -> bool:
     return True
 
 
-@user_router.get("/user", response_class=HTMLResponse)
+@user_router.get(
+    "/user",
+    tags=["USER"],
+    response_class=HTMLResponse,
+    description="Get all possible user operations page.",
+)
 async def get_user_operations(request: Request) -> Jinja2Templates:
     """
     \f Endpoint to get user operations page.
@@ -49,7 +54,12 @@ async def get_user_operations(request: Request) -> Jinja2Templates:
     )
 
 
-@user_router.get("/user/get/all", response_class=HTMLResponse)
+@user_router.get(
+    "/user/get/all",
+    tags=["USER"],
+    response_class=HTMLResponse,
+    description="List all users from database. No login needed.",
+)
 async def get_all_users(request: Request) -> Jinja2Templates:
     """
     \f Endpoint to get all users from database page.
@@ -67,7 +77,12 @@ async def get_all_users(request: Request) -> Jinja2Templates:
     )
 
 
-@user_router.post("/user/get", response_class=HTMLResponse)
+@user_router.post(
+    "/user/get",
+    tags=["USER"],
+    response_class=HTMLResponse,
+    description="Get specific user info. No login in needed.",
+)
 async def get_user(request: Request) -> Jinja2Templates:
     """
     \f Endpoint to get specific user data.
@@ -98,7 +113,12 @@ async def get_user(request: Request) -> Jinja2Templates:
     )
 
 
-@user_router.post("/user/update", response_class=HTMLResponse)
+@user_router.post(
+    "/user/update",
+    tags=["USER"],
+    response_class=HTMLResponse,
+    description="Update user password. Only admin or logged in user can change his own password. Login needed.",
+)
 async def update_user_password(request: Request) -> Jinja2Templates:
     """
     \f Endpoint to update secific user password.
@@ -157,7 +177,9 @@ async def update_user_password(request: Request) -> Jinja2Templates:
 @user_router.post(
     "/user/add",
     dependencies=[Depends(oauth2_scheme)],
+    tags=["USER"],
     response_class=HTMLResponse,
+    description="Add new user - admin permitted only. Log in needed.",
 )
 async def add_user(request: Request) -> Jinja2Templates:
     """
@@ -207,7 +229,9 @@ async def add_user(request: Request) -> Jinja2Templates:
 @user_router.post(
     "/user/delete",
     dependencies=[Depends(oauth2_scheme)],
+    tags=["USER"],
     response_class=HTMLResponse,
+    description="Delete user - admin permitted only. Log in needed.",
 )
 async def delete_user(request: Request) -> Jinja2Templates:
     """
