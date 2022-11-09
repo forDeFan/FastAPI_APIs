@@ -9,6 +9,24 @@ from app.core.user_repo import UserRepo
 from app.core.config import settings
 
 
+def include_description():
+    """
+    Add basic description for docs endpoint.
+    """
+    description = """
+        Training project.
+
+        The API returns Jinja generated templates in response.
+        Authentication and authorization layers implemented thru JWT token returned inside cookies.
+
+        At first app run user can log into as admin (see users/get/all endpoint for log in details) to add more users and 
+        try out restrictions in user modification in regard to privilege level (admin/ non-admin user).
+
+        Passwords and login data shown intentionally to make log in/ user swap easier.
+        """
+    return description
+
+
 def include_router(app: FastAPI) -> None:
     """
     To include specific API routes into FastAPI app.
@@ -28,7 +46,11 @@ def configure_static(app: FastAPI) -> None:
     Args:
         app (FastAPI): instance
     """
-    app.mount("/static", StaticFiles(directory="app/web/static"), name="static")
+    app.mount(
+        "/static",
+        StaticFiles(directory="app/web/static"),
+        name="static",
+    )
 
 
 def start_application() -> FastAPI:
@@ -39,7 +61,9 @@ def start_application() -> FastAPI:
     Returns:
         FastAPI: runnable instance
     """
-    app = FastAPI(title="Fast API training")
+    app = FastAPI(
+        title="Fast API training", description=include_description()
+    )
     include_router(app)
     configure_static(app)
     metadata.create_all(engine)
