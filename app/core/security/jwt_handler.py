@@ -1,16 +1,18 @@
 from datetime import datetime, timedelta
 from typing import Dict, Union
 
+from fastapi import Request
+from jose import JWTError, jwt
+
 from app.core.config import settings
 from app.core.db.user_model import User
 from app.core.user_repo import UserRepo
-from fastapi import Request
-from jose import jwt, JWTError
 
 
 def create_access_token(data: Dict) -> str:
     """
     Create JWT token.
+    Expiration time returned in token as timestamp.
 
     Args:
         data (Dict): {"username": provided username : str}
@@ -31,7 +33,19 @@ def create_access_token(data: Dict) -> str:
     return encoded_jwt
 
 
-async def decode_access_token(token: str):
+async def decode_access_token(token: str) -> Union[Dict, None]:
+    """
+    Decode JWT extracted from authorization cookie.
+    Validate JWT expiry time.
+
+    Args:
+        token (str): to be decoded.
+
+    Returns:
+        Union[Dict, None]:
+            return Dict of username and validation timestamp
+            return None if JWT decoding error or JWT expired
+    """
     token = token.lstrip("Bearer").strip()
     try:
         payload = jwt.decode(
@@ -48,6 +62,18 @@ async def decode_access_token(token: str):
 async def get_current_user_from_cookie(
     request: Request,
 ) -> Union[User, None]:
+    """
+    Get user from authorization cookie.
+
+    Args:
+        request (Request): to be used in templating.
+
+    Returns:
+        Union[User, None]:
+            return User if authorization cookie present
+            return None if authorization cookie not present
+                        or no such user in databes
+    """
     token = request.cookies.get(settings.COOKIE_NAME)
     try:
         payload = await decode_access_token(token=token)
