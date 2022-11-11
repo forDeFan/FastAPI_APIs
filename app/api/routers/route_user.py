@@ -296,7 +296,7 @@ async def delete_user(request: Request) -> Jinja2Templates:
                         )
                     if user is False:
                         form.errors.append("Admin can not be removed !")
-                    else:
+                    if user is None:
                         form.errors.append("No such user!")
                 else:
                     form.errors.append("Only Admin can delete users!")
