@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.routers.route_login import login_router
 from app.api.routers.route_root import root_router
 from app.api.routers.route_user import user_router
-from app.core.db.db import database, engine, metadata
+from app.core.db import database, engine, metadata
 from app.core.user_repo import UserRepo
 from app.core.config import settings
 
