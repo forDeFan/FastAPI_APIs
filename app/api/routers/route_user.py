@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Union
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -80,13 +80,13 @@ async def get_all_users(request: Request) -> Jinja2Templates:
 
 
 @user_router.post(
-    "/user/get/{username}",
+    "/user/get/",
     tags=["USER"],
     response_class=HTMLResponse,
     description="Get specific user info. No login in needed.",
 )
 async def get_user(
-    request: Request,
+    request: Request
 ) -> Jinja2Templates:
     """
     \f Endpoint to get specific user data.
