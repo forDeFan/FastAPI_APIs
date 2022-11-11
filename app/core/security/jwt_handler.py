@@ -5,7 +5,7 @@ from fastapi import Request
 from jose import JWTError, jwt
 
 from app.core.config import settings
-from app.core.db.user_model import User
+from app.core.model.user_model import UserModel
 from app.core.user_repo import UserRepo
 
 
@@ -61,7 +61,7 @@ async def decode_access_token(token: str) -> Union[Dict, None]:
 
 async def get_current_user_from_cookie(
     request: Request,
-) -> Union[User, None]:
+) -> Union[UserModel, None]:
     """
     Get user from authorization cookie.
 

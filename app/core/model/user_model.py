@@ -1,11 +1,11 @@
 from app.core.config import settings
-from app.core.db.db import BaseMeta
+from app.core.db import BaseMeta
 from ormar import Boolean, EncryptBackends, Integer, Model, String
 
 
-class User(Model):
+class UserModel(Model):
     """
-    Model of User object to be checked against Pydantic by Ormar
+    Model of UserModel object to be checked against Pydantic by Ormar
     ORM implementation.
     Creation of users table in this point.
     """

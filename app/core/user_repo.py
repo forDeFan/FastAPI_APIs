@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from app.core.db.user_model import User
+from app.core.model.user_model import UserModel
 from asyncpg import UniqueViolationError
 from ormar.exceptions import NoMatch
 
@@ -11,18 +11,20 @@ class UserRepo:
     """
 
     @classmethod
-    async def get_all(cls) -> List[User]:
+    async def get_all(cls) -> List[UserModel]:
         """
         Get all users from database.
 
         Returns:
             List[User]: all users from databse
         """
-        users = await User.objects.all()
+        users = await UserModel.objects.all()
         return users
 
     @classmethod
-    async def get_by_username(cls, username: str) -> Union[User, None]:
+    async def get_by_username(
+        cls, username: str
+    ) -> Union[UserModel, None]:
         """
         Get user from database by username.
 
@@ -34,13 +36,15 @@ class UserRepo:
                 if user exist return User object
                 if not return None
         """
-        user = await User.objects.filter(username=username).get_or_none()
+        user = await UserModel.objects.filter(
+            username=username
+        ).get_or_none()
         return user
 
     @classmethod
     async def update_user_password(
         cls, username: str, new_password: str
-    ) -> Union[User, None]:
+    ) -> Union[UserModel, None]:
         """
         Update user password if user exists in database.
 
@@ -54,10 +58,12 @@ class UserRepo:
                 if not exists return None
         """
         try:
-            await User.objects.filter(username__contains=username).update(
-                password=new_password
-            )
-            updated_user = await User.objects.filter(username__contains=username).get()
+            await UserModel.objects.filter(
+                username__contains=username
+            ).update(password=new_password)
+            updated_user = await UserModel.objects.filter(
+                username__contains=username
+            ).get()
             return updated_user
         except:
             return None
@@ -70,7 +76,7 @@ class UserRepo:
         password: str,
         is_active: bool = True,
         is_admin: bool = False,
-    ) -> Union[User, None]:
+    ) -> Union[UserModel, None]:
         """
         Add new user to database.
 
@@ -89,7 +95,7 @@ class UserRepo:
         try:
             # Remove single quotes from .env file in admin pass case.
             password = password.replace("'", "")
-            user = await User.objects.create(
+            user = await UserModel.objects.create(
                 username=username,
                 email=email,
                 password=password,
@@ -114,7 +120,9 @@ class UserRepo:
                 return None if user was not found in database by username and wasn't deleted
         """
         try:
-            user = await User.objects.filter(username__contains=username).first()
+            user = await UserModel.objects.filter(
+                username__contains=username
+            ).first()
             if not user.is_admin:
                 await user.delete()
                 return True

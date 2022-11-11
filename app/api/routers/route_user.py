@@ -8,7 +8,7 @@ from app.api.forms.add_user_form import AddUserForm
 from app.api.forms.check_user_form import CheckUserForm
 from app.api.forms.update_user_pass_form import UpdateUserPassForm
 from app.core.config import settings
-from app.core.db.user_model import User
+from app.core.model.user_model import UserModel
 from app.core.security.auth import OAuth2PasswordBearerWithCookie
 from app.core.security.jwt_handler import get_current_user_from_cookie
 from app.core.user_repo import UserRepo
@@ -19,7 +19,7 @@ user_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="/token")
 
 
-async def get_cookie_user(request: Request) -> Union[User, None]:
+async def get_cookie_user(request: Request) -> Union[UserModel, None]:
     """
     Helper method to get user from session cookie.
     If no cookie user will be returned as None.
