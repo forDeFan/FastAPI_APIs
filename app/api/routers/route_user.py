@@ -1,5 +1,3 @@
-from typing import Union
-
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -8,31 +6,17 @@ from app.api.forms.add_user_form import AddUserForm
 from app.api.forms.check_user_form import CheckUserForm
 from app.api.forms.update_user_pass_form import UpdateUserPassForm
 from app.core.config import settings
-from app.core.model.user_model import UserModel
 from app.core.security.auth import OAuth2PasswordBearerWithCookie
-from app.core.security.jwt_handler import get_current_user_from_cookie
+from app.core.security.jwt_handler import (
+    check_if_token_blacklisted,
+    get_current_user_from_cookie,
+)
 from app.core.user_repo import UserRepo
 
 templates = Jinja2Templates(directory="app/web/templates/")
 user_router = APIRouter()
 # API endpoint to get new token from.
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="/token")
-
-
-async def get_cookie_user(request: Request) -> Union[UserModel, None]:
-    """
-    Helper method to get user from session cookie.
-    If no cookie user will be returned as None.
-
-    Args:
-        request (Request): to be used in templating.
-
-    Returns:
-        Union[User, None]:
-            If authorization cookie present in request - return User
-            If no authorization cookie present in request - return None
-    """
-    return await get_current_user_from_cookie(request=request)
 
 
 @user_router.get(
@@ -85,9 +69,7 @@ async def get_all_users(request: Request) -> Jinja2Templates:
     response_class=HTMLResponse,
     description="Get specific user info. No login in needed.",
 )
-async def get_user(
-    request: Request
-) -> Jinja2Templates:
+async def get_user(request: Request) -> Jinja2Templates:
     """
     \f Endpoint to get specific user data.
     Non logged in user can browse other users data.
@@ -126,7 +108,7 @@ async def get_user(
 async def update_user_password(request: Request) -> Jinja2Templates:
     """
     \f Endpoint to update secific user password.
-    
+
     Only logged in user can change his own password.
     Logged in user can't change password of other user (authorization thru cookie JWT).
     Admin can change password for all users.
@@ -137,12 +119,17 @@ async def update_user_password(request: Request) -> Jinja2Templates:
         request (Request): to be used in templating.
 
     Returns:
-        Jinja2Templates: user opareations page.
+        Jinja2Templates: user oparations page.
     """
     form = UpdateUserPassForm(request=request)
     await form.load_data()
     if await form.is_valid():
-        cookie_user = await get_cookie_user(request=request)
+        cookie_user = await get_current_user_from_cookie(
+            request=request
+        )
+        token_blacklisted = await check_if_token_blacklisted(
+            request=request
+        )
         if cookie_user is None:
             form.errors.append("Update not allowed without log in!")
         else:
@@ -150,7 +137,9 @@ async def update_user_password(request: Request) -> Jinja2Templates:
                 username=form.username
             )
             # To check if session expired while in opeations.
-            if cookie_user is not None:
+            if (cookie_user is not None) and (
+                token_blacklisted is False
+            ):
                 if db_user is not None:
                     if (
                         cookie_user.username == db_user.username
@@ -210,17 +199,24 @@ async def add_user(request: Request) -> Jinja2Templates:
         request (Request): to be used in templating.
 
     Returns:
-        Jinja2Templates: user opareations page.
+        Jinja2Templates: user oparations page.
     """
     form = AddUserForm(request=request)
     await form.load_data()
     if await form.is_valid():
-        cookie_user = await get_cookie_user(request=request)
+        cookie_user = await get_current_user_from_cookie(
+            request=request
+        )
+        token_blacklisted = await check_if_token_blacklisted(
+            request=request
+        )
         if cookie_user is None:
             form.errors.append("Adding not allowed without log in!")
         else:
-            # To check if session expired while in opeations.
-            if cookie_user is not None:
+            # To check if session expired while in opeations or not stolen token.
+            if (cookie_user is not None) and (
+                token_blacklisted is False
+            ):
                 if cookie_user.is_admin:
                     new_user = await UserRepo.add_user(
                         username=form.username,
@@ -275,17 +271,24 @@ async def delete_user(request: Request) -> Jinja2Templates:
         request (Request): to be used in templating.
 
     Returns:
-        Jinja2Templates: user opareations page.
+        Jinja2Templates: user operations page.
     """
     form = CheckUserForm(request=request)
     await form.load_data()
     if await form.is_valid():
-        cookie_user = await get_cookie_user(request=request)
+        cookie_user = await get_current_user_from_cookie(
+            request=request
+        )
+        token_blacklisted = await check_if_token_blacklisted(
+            request=request
+        )
         if cookie_user is None:
             form.errors.append("Delete not allowed without log in!")
         else:
-            # To check if session expired while in opeations.
-            if cookie_user is not None:
+            # To check if session expired while in opeations or not stolen token.
+            if (cookie_user is not None) and (
+                token_blacklisted is False
+            ):
                 if cookie_user.is_admin:
                     user = await UserRepo.delete_user(
                         username=form.username
@@ -295,11 +298,17 @@ async def delete_user(request: Request) -> Jinja2Templates:
                             msg=f"User with username: {form.username}, deleted succesfully."
                         )
                     if user is False:
-                        form.errors.append("Admin can not be removed !")
+                        form.errors.append(
+                            "Not deleted - Admin can not be removed!"
+                        )
                     if user is None:
-                        form.errors.append("No such user!")
+                        form.errors.append(
+                            "Not deleted - no such user!"
+                        )
                 else:
-                    form.errors.append("Only Admin can delete users!")
+                    form.errors.append(
+                        "Not deleted - only Admin can remove users!"
+                    )
             else:
                 form.errors.append(
                     "Your session expired - please log in again."
