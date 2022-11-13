@@ -5,9 +5,8 @@ from ormar import Boolean, EncryptBackends, Integer, Model, String
 
 class UserModel(Model):
     """
-    Model of UserModel object to be checked against Pydantic by Ormar
-    ORM implementation.
-    Creation of users table in this point.
+    Model class for database operations to be checked against Pydantic by Ormar.
+    Table used to store users.
     """
     class Meta(BaseMeta):
         tablename = "users"
