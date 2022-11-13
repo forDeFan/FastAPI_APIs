@@ -2,7 +2,10 @@ from typing import Dict, Union
 
 from app.api.forms.login_form import LoginForm
 from app.core.config import settings
-from app.core.security.jwt_handler import create_access_token
+from app.core.security.jwt_handler import (
+    create_access_token,
+    blacklist_token,
+)
 from app.core.user_repo import UserRepo
 from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -113,12 +116,16 @@ async def get_access_token(
     "/logout",
     tags=["LOGIN"],
     response_class=HTMLResponse,
-    description="Destroy cookies after log out.",
+    description="Destroy cookies after log out. Blacklist JWT.",
 )
-def delete_cookie(response: Response) -> RedirectResponse:
+async def delete_cookie(
+    response: Response, request: Request
+) -> RedirectResponse:
     """
     \f Log out endpoint.
+
     Authorization cookie destroyed here.
+    JWT token blacklisted here.
 
     Args:
         response (Response): to be used in templating.
@@ -126,6 +133,7 @@ def delete_cookie(response: Response) -> RedirectResponse:
     Returns:
         RedirectResponse: redirection to login page.
     """
+    await blacklist_token(request=request)
     response = RedirectResponse(
         url="/login", status_code=status.HTTP_302_FOUND
     )

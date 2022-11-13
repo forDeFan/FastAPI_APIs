@@ -7,7 +7,8 @@
 
 {% block content %}
 <div class="container">
-    {% if ('access_token' in request.cookies) %}
+    {# cSame value must be provided in "if" as in config.py -> COOKIE_NAME. TODO: implement value import from config #}
+    {% if request.cookies.get("access_token") is not none %}
     <h2>LOG OUT</h2>
     <p>
         You are logged in.
