@@ -48,7 +48,7 @@ class UpdateUserPassForm(CheckUserForm):
         if not self.old_password or not len(self.old_password) >= 5:
             self.errors.append("A valid old password is required")
         if not self.new_password or not len(self.new_password) >= 5:
-            self.errors.append("A valid new password is required")
+            self.errors.append("A valid new password is required (min. 5 chars lenght)")
         if not self.errors:
             return True
         return False
