@@ -7,6 +7,7 @@ from jose import JWTError, jwt
 from app.core.config import settings
 from app.core.model.user_model import UserModel
 from app.core.user_repo import UserRepo
+from app.core.jwt_repo import JwtRepo
 
 
 def create_access_token(data: Dict) -> str:
@@ -83,3 +84,39 @@ async def get_current_user_from_cookie(
         user = None
 
     return user
+
+
+async def check_if_token_blacklisted(request: Request) -> bool:
+    """
+    Check against database if token wasn't used before.
+
+    Args:
+        request (Request): used in templating.
+
+    Returns:
+        bool:
+            True - if token was used before and is blacklisted
+            False - if token is not blacklisted
+    """
+    try:
+        cookie = request.cookies.get(settings.COOKIE_NAME)
+        token = cookie.lstrip("Bearer").strip()
+        blacklisted_token = await JwtRepo.get_from_database(token=token)
+    except AttributeError:
+        blacklisted_token = None
+
+    if blacklisted_token is not None:
+        return True
+    return False
+
+
+async def blacklist_token(request: Request) -> None:
+    """
+    Add token to blacklist in database to not be used again.
+
+    Args:
+        request (Request): used in templating.
+    """
+    cookie = request.cookies.get(settings.COOKIE_NAME)
+    token = cookie.lstrip("Bearer").strip()
+    await JwtRepo.add_to_database(token=token)
