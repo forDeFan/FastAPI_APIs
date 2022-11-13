@@ -7,7 +7,7 @@ from ormar.exceptions import NoMatch
 
 class UserRepo:
     """
-    Main user repository to use ORM in it.
+    User repository connecting with User Model in Ormar for validation.
     """
 
     @classmethod
