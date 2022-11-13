@@ -7,7 +7,16 @@
 {% block content %}
 <div class="container">
     <h1>Hello at homepage</h1>
-    <p>On this webservice you can review all users in database.</p>
-    <p><strong>Only logged user</strong> can perform add/ delete/ update operations.</p>
+    <p>On this webservice you can perform operations on the users database - there is authentication/ authorization on endponits.</p>
+    <p>Not logged in user can view all users data ("User operations" tab -> Get existing user field). 
+        <strong>All other operations require logging in.</strong>
+    </p>
+    <p>
+        <strong>User with ADMIN privileges ONLY</strong> 
+        can perform add/ delete/ update.
+    </p>
+    <p>User that is not admin can change his own password only (can't for other users).</p>
+    <p>Admin data for login in "List users" tab - also all newly added/ removed users will apear/ hide there.</p>
+    </p>
 </div>
 {% endblock %}
