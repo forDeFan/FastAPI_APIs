@@ -3,7 +3,10 @@
 .env
 .env_example
 .dockerignore
+.pytest_cache
+.vscode
 venv
+**/__pycache__
+tests
 Dockerfile
 README.md
-**/__pycache__
